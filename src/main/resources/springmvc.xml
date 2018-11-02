@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+
+
+	<!-- 扫描@Controler @Service -->
+	<context:component-scan base-package="com.ndt" />
+
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<!-- 处理responseBody里日期类型 -->
+	            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+					<property name="objectMapper">
+						<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+							<property name="dateFormat">
+								<bean class="java.text.SimpleDateFormat">
+									<constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+								</bean>
+							</property>
+						</bean>
+					</property>
+				</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!--对静态资源文件的访问 -->
+
+	<mvc:default-servlet-handler />
+	<!-- <mvc:resources mapping="/static/img/**" location="/static/img/" /> 
+		<mvc:resources mapping="/static/css/**" location="/static/css/" /> <mvc:resources 
+		mapping="/static/fonts/**" location="/static/fonts/" /> <mvc:resources mapping="/static/js/**" 
+		location="/static/js/" /> <mvc:resources mapping="/static/mock/**" location="/static/mock/" 
+		/> <mvc:resources mapping="/static/js/**" location="/static/js/" /> -->
+
+
+	<!-- 配置Conveter转换器 转换工厂 （日期、去掉前后空格）。。 -->
+	<!-- <bean id="conversionServiceFactoryBean" class="org.springframework.format.support.FormattingConversionServiceFactoryBean"> 
+		配置 多个转换器 <property name="converters"> <list> <bean class="com.itheima.springmvc.conversion.DateConveter"/> 
+		</list> </property> </bean> -->
+
+	<!-- 上传图片配置实现类 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+		<!-- 上传图片的大小 B 5M 1*1024*1024*5  -->
+		<property name="maxUploadSize" value="5000000"/> 
+	</bean>
+
+	<!-- Springmvc的异常处理器 -->
+	<!-- <bean class="com.itheima.springmvc.exception.CustomExceptionResolver"/> -->
+
+	<!-- SPringmvc的拦截器 -->
+	<!-- <mvc:interceptors> 多个拦截器 <mvc:interceptor> <mvc:mapping path="/**"/> 
+		自定义的拦截器类 <bean class="com.ndt.interceptor.LoginInterceptor"/> </mvc:interceptor> 
+		<mvc:interceptor> <mvc:mapping path="/**"/> 自定义的拦截器类 <bean class="com.itheima.springmvc.interceptor.Interceptor2"/> 
+		</mvc:interceptor> </mvc:interceptors> -->
+
+	<!-- 视图解释器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/" />
+	</bean>
+
+</beans>

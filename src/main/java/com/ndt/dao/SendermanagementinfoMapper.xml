@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ndt.dao.SendermanagementinfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.ndt.entity.Sendermanagementinfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="orderNumber" jdbcType="VARCHAR"
+			property="ordernumber" />
+		<result column="orderMoney" jdbcType="DOUBLE"
+			property="ordermoney" />
+		<result column="numberPlate" jdbcType="VARCHAR"
+			property="numberplate" />
+		<result column="orderDriver" jdbcType="VARCHAR"
+			property="orderdriver" />
+		<result column="onceTraffic" jdbcType="VARCHAR"
+			property="oncetraffic" />
+		<result column="singleNumber" jdbcType="VARCHAR"
+			property="singlenumber" />
+		<result column="WaybillState" jdbcType="VARCHAR"
+			property="waybillstate" />
+		<result column="totalTraffic" jdbcType="VARCHAR"
+			property="totaltraffic" />
+		<result column="bTime" jdbcType="TIMESTAMP" property="btime" />
+		<result column="eTime" jdbcType="TIMESTAMP" property="etime" />
+		<result column="location" jdbcType="VARCHAR"
+			property="location" />
+		<result column="transport" jdbcType="VARCHAR"
+			property="transport" />
+		<result column="operating" jdbcType="VARCHAR"
+			property="operating" />
+		<result column="mark" jdbcType="VARCHAR" property="mark" />
+		<result column="createTime" jdbcType="TIMESTAMP"
+			property="createtime" />
+		<result column="oid" jdbcType="INTEGER" property="oid" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value}
+									and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, orderNumber, orderMoney, numberPlate, orderDriver,
+		onceTraffic,
+		singleNumber,
+		WaybillState, totalTraffic, bTime, eTime,
+		location, transport, operating, mark,
+		createTime,
+		oid
+	</sql>
+	<select id="selectByExample"
+		parameterType="com.ndt.entity.SendermanagementinfoExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from sendermanagementinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sendermanagementinfo
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByMaxId" resultMap="BaseResultMap">
+		SELECT * FROM
+		sendermanagementinfo ORDER BY id DESC LIMIT 0,1
+	</select>
+	<select id="selectAll" resultType="java.util.HashMap">
+		select ordermanagementinfo.*,goodsinfo.goodsname,goodsinfo.goodstype
+		from ordermanagementinfo,goodsinfo
+		<where>
+			and ordermanagementinfo.gid=goodsinfo.id and
+			ordermanagementinfo.remain&gt;0
+			<if test="goodsname!=null &amp;&amp; goodsname!=&quot;&quot;">
+				and ordermanagementinfo.gid=#{goodsname}
+			</if>
+			<if test="ordernumber!=null &amp;&amp; ordernumber!=&quot;&quot;">
+				and ordermanagementinfo.ordernumber=#{ordernumber}
+			</if>
+
+			<if test="start!=null &amp;&amp; start!=&quot;&quot;">
+				and ordermanagementinfo.orderCreateTime&gt;=#{start}
+			</if>
+			<if test="end!=null &amp;&amp; end!=&quot;&quot;">
+				and ordermanagementinfo.orderCreateTime &lt;=#{end}
+			</if>
+			<if test="departure!=null &amp;&amp; departure!=&quot;&quot;">
+				and ordermanagementinfo.departure like #{departure}
+			</if>
+			<if test="destination!=null &amp;&amp; destination!=&quot;&quot;">
+				and ordermanagementinfo.destination like #{destination}
+			</if>
+		</where>
+		order by id desc limit #{pages},15
+	</select>
+	<select id="selectSends" resultType="java.util.HashMap">
+		SELECT
+		o.totaltraffic,s.*,o.departure,o.destination,o.dispatchedparty,o.carrier,o.sendername,
+		sendertel,o.receivername,o.receivertel,o.contractrote
+		FROM
+		sendermanagementinfo s
+		LEFT JOIN ordermanagementinfo o ON
+		s.ordernumber=o.ordernumber
+		<where>
+			<if test="type==&quot;1&quot;">
+				and s.waybillstate in ('接单中','运输中','已接单')
+			</if>
+			<if test="type==&quot;2&quot;">
+				and s.waybillstate in ('已完成')
+			</if>
+			<if test="ordernumber!=null &amp;&amp; ordernumber!=&quot;&quot;">
+				and o.ordernumber=#{ordernumber}
+			</if>
+			<if
+				test="singlenumber!=null &amp;&amp; singlenumber!=&quot;&quot;">
+				and s.singlenumber=#{singlenumber}
+			</if>
+
+			<if test="departure!=null &amp;&amp; departure!=&quot;&quot;">
+				and o.departure like '%${departure}%'
+			</if>
+			<if test="destination!=null &amp;&amp; destination!=&quot;&quot;">
+				and o.destination like '%${destination}%'
+			</if>
+			<if test="orderdriver!=null &amp;&amp; orderdriver!=&quot;&quot;">
+				and s.orderdriver=#{orderdriver}
+			</if>
+			<if test="numberplate!=null &amp;&amp; numberplate!=&quot;&quot;">
+				and s.numberplate=#{numberplate}
+			</if>
+			<if test="oid!=null &amp;&amp; oid!=&quot;&quot;">
+				and s.oid=#{oid}
+			</if>
+			<if
+				test="timetype==&quot;ordercreatetime&quot; &amp;&amp; start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and o.ordercreatetime between #{start} and #{end}
+			</if>
+			<if
+				test="timetype==&quot;sendcreatetime&quot; &amp;&amp; start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and s.createtime between #{start} and #{end}
+			</if>
+			<if
+				test="timetype==&quot;departuretime&quot; &amp;&amp; start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and s.btime between #{start} and #{end}
+			</if>
+			<if
+				test="timetype==&quot;arrivaltime&quot; &amp;&amp; start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and s.etime between #{start} and #{end}
+			</if>
+		</where>
+		order by id desc limit #{pages},15
+	</select>
+	<select id="selectSendsCount" resultType="Integer">
+		SELECT count(*) FROM sendermanagementinfo s
+		LEFT JOIN
+		ordermanagementinfo o ON s.ordernumber=o.ordernumber
+		<where>
+			<if test="type==&quot;1&quot;">
+				and s.waybillstate in ('接单中','运输中','已接单')
+			</if>
+			<if test="type==&quot;2&quot;">
+				and s.waybillstate in ('已完成')
+			</if>
+			<if test="ordernumber!=null &amp;&amp; ordernumber!=&quot;&quot;">
+				and o.ordernumber=#{ordernumber}
+			</if>
+			<if
+				test="singlenumber!=null &amp;&amp; singlenumber!=&quot;&quot;">
+				and s.singlenumber=#{singlenumber}
+			</if>
+
+			<if test="departure!=null &amp;&amp; departure!=&quot;&quot;">
+				and o.departure like '%${departure}%'
+			</if>
+			<if test="destination!=null &amp;&amp; destination!=&quot;&quot;">
+				and o.destination like '%${destination}%'
+			</if>
+			<if test="orderdriver!=null &amp;&amp; orderdriver!=&quot;&quot;">
+				and s.orderdriver=#{orderdriver}
+			</if>
+			<if test="numberplate!=null &amp;&amp; numberplate!=&quot;&quot;">
+				and s.numberplate=#{numberplate}
+			</if>
+			<if test="oid!=null &amp;&amp; oid!=&quot;&quot;">
+				and s.oid=#{oid}
+			</if>
+			<if
+				test="timetype==&quot;ordercreatetime&quot; &amp;&amp; start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and o.ordercreatetime between #{start} and #{end}
+			</if>
+			<if
+				test="timetype==&quot;sendcreatetime&quot; &amp;&amp; start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and s.createtime between #{start} and #{end}
+			</if>
+			<if
+				test="timetype==&quot;departuretime&quot; &amp;&amp; start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and s.btime between #{start} and #{end}
+			</if>
+			<if
+				test="timetype==&quot;arrivaltime&quot; &amp;&amp; start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and s.etime between #{start} and #{end}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectCount" resultType="Integer">
+		select count(*) from ordermanagementinfo,goodsinfo
+		<where>
+			and ordermanagementinfo.gid=goodsinfo.id and
+			ordermanagementinfo.remain&gt;0
+			<if test="goodsname!=null &amp;&amp; goodsname!=&quot;&quot;">
+				and ordermanagementinfo.gid=#{goodsname}
+			</if>
+			<if test="ordernumber!=null &amp;&amp; ordernumber!=&quot;&quot;">
+				and ordermanagementinfo.ordernumber=#{ordernumber}
+			</if>
+
+			<if test="start!=null &amp;&amp; start!=&quot;&quot;">
+				and ordermanagementinfo.orderCreateTime&gt;=#{start}
+			</if>
+			<if test="end!=null &amp;&amp; end!=&quot;&quot;">
+				and ordermanagementinfo.orderCreateTime &lt;=#{end}
+			</if>
+			<if test="departure!=null &amp;&amp; departure!=&quot;&quot;">
+				and ordermanagementinfo.departure=#{departure}
+			</if>
+			<if test="destination!=null &amp;&amp; destination!=&quot;&quot;">
+				and ordermanagementinfo.destination=#{destination}
+			</if>
+
+		</where>
+	</select>
+	<select id="getDataStatis" resultType="java.util.HashMap">
+		SELECT d.realname, d.tel,SUM(ordermoney) money,SUM(oncetraffic) traffic 
+		FROM sendermanagementinfo s LEFT JOIN driverinfo d ON s.numberplate = d.id
+		<where>
+			!ISNULL(etime) AND waybillstate = '已完成' 
+			<if test="numberplate!=null &amp;&amp; numberplate!=&quot;&quot;">
+				and s.numberplate=#{numberplate}
+			</if>
+			<!-- <if test="orderdriver!=null &amp;&amp; orderdriver!=&quot;&quot;">
+				and s.orderdriver=#{orderdriver}
+			</if> -->
+			<if test="start!=null &amp;&amp; end!=null">
+				and s.etime between #{start} and #{end}
+			</if>
+		</where>
+		GROUP BY s.numberplate limit #{pages},15
+	</select>
+
+	<select id="getDataStatisCount" resultType="Integer">
+		SELECT
+		count(*)
+		FROM(SELECT
+		count(*)
+		FROM
+		sendermanagementinfo s
+		LEFT JOIN
+		driverinfo d ON s.orderdriver = d.id
+		<where>
+			!ISNULL(etime) AND waybillstate = '已完成'
+			<if test="numberplate!=null &amp;&amp; numberplate!=&quot;&quot;">
+				and s.numberplate=#{numberplate}
+			</if>
+			<if test="orderdriver!=null &amp;&amp; orderdriver!=&quot;&quot;">
+				and s.orderdriver=#{orderdriver}
+			</if>
+			<if test="start!=null &amp;&amp; end!=null">
+				and s.etime between #{start} and #{end}
+			</if>
+		</where>
+		GROUP BY s.numberplate) a
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from sendermanagementinfo
+		where id =
+		#{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="com.ndt.entity.SendermanagementinfoExample">
+		delete from sendermanagementinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<delete id="deleteByIds" parameterType="int">
+		delete from ordermanagementinfo where
+		id in
+		<foreach collection="array" item="item" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<insert id="insert"
+		parameterType="com.ndt.entity.Sendermanagementinfo">
+		insert into sendermanagementinfo (id, orderNumber,
+		orderMoney,
+		numberPlate, orderDriver, onceTraffic,
+		singleNumber,
+		WaybillState, totalTraffic,
+		bTime, eTime, location,
+		transport,
+		operating, mark,
+		createTime, oid)
+		values (#{id,jdbcType=INTEGER},
+		#{ordernumber,jdbcType=VARCHAR},
+		#{ordermoney,jdbcType=DOUBLE},
+		#{numberplate,jdbcType=VARCHAR}, #{orderdriver,jdbcType=VARCHAR},
+		#{oncetraffic,jdbcType=VARCHAR},
+		#{singlenumber,jdbcType=VARCHAR},
+		#{waybillstate,jdbcType=VARCHAR},
+		#{totaltraffic,jdbcType=VARCHAR},
+		#{btime,jdbcType=TIMESTAMP}, #{etime,jdbcType=TIMESTAMP},
+		#{location,jdbcType=VARCHAR},
+		#{transport,jdbcType=VARCHAR},
+		#{operating,jdbcType=VARCHAR},
+		#{mark,jdbcType=VARCHAR},
+		#{createtime,jdbcType=TIMESTAMP}, #{oid,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ndt.entity.Sendermanagementinfo">
+		insert into sendermanagementinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="ordernumber != null">
+				orderNumber,
+			</if>
+			<if test="ordermoney != null">
+				orderMoney,
+			</if>
+			<if test="numberplate != null">
+				numberPlate,
+			</if>
+			<if test="orderdriver != null">
+				orderDriver,
+			</if>
+			<if test="oncetraffic != null">
+				onceTraffic,
+			</if>
+			<if test="singlenumber != null">
+				singleNumber,
+			</if>
+			<if test="waybillstate != null">
+				WaybillState,
+			</if>
+			<if test="totaltraffic != null">
+				totalTraffic,
+			</if>
+			<if test="btime != null">
+				bTime,
+			</if>
+			<if test="etime != null">
+				eTime,
+			</if>
+			<if test="location != null">
+				location,
+			</if>
+			<if test="transport != null">
+				transport,
+			</if>
+			<if test="operating != null">
+				operating,
+			</if>
+			<if test="mark != null">
+				mark,
+			</if>
+			<if test="createtime != null">
+				createTime,
+			</if>
+			<if test="oid != null">
+				oid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="ordernumber != null">
+				#{ordernumber,jdbcType=VARCHAR},
+			</if>
+			<if test="ordermoney != null">
+				#{ordermoney,jdbcType=DOUBLE},
+			</if>
+			<if test="numberplate != null">
+				#{numberplate,jdbcType=VARCHAR},
+			</if>
+			<if test="orderdriver != null">
+				#{orderdriver,jdbcType=VARCHAR},
+			</if>
+			<if test="oncetraffic != null">
+				#{oncetraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="singlenumber != null">
+				#{singlenumber,jdbcType=VARCHAR},
+			</if>
+			<if test="waybillstate != null">
+				#{waybillstate,jdbcType=VARCHAR},
+			</if>
+			<if test="totaltraffic != null">
+				#{totaltraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="btime != null">
+				#{btime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="etime != null">
+				#{etime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="location != null">
+				#{location,jdbcType=VARCHAR},
+			</if>
+			<if test="transport != null">
+				#{transport,jdbcType=VARCHAR},
+			</if>
+			<if test="operating != null">
+				#{operating,jdbcType=VARCHAR},
+			</if>
+			<if test="mark != null">
+				#{mark,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="oid != null">
+				#{oid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="com.ndt.entity.SendermanagementinfoExample"
+		resultType="java.lang.Long">
+		select count(*) from sendermanagementinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update sendermanagementinfo
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=INTEGER},
+			</if>
+			<if test="record.ordernumber != null">
+				orderNumber = #{record.ordernumber,jdbcType=VARCHAR},
+			</if>
+			<if test="record.ordermoney != null">
+				orderMoney = #{record.ordermoney,jdbcType=DOUBLE},
+			</if>
+			<if test="record.numberplate != null">
+				numberPlate = #{record.numberplate,jdbcType=VARCHAR},
+			</if>
+			<if test="record.orderdriver != null">
+				orderDriver = #{record.orderdriver,jdbcType=VARCHAR},
+			</if>
+			<if test="record.oncetraffic != null">
+				onceTraffic = #{record.oncetraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="record.singlenumber != null">
+				singleNumber = #{record.singlenumber,jdbcType=VARCHAR},
+			</if>
+			<if test="record.waybillstate != null">
+				WaybillState = #{record.waybillstate,jdbcType=VARCHAR},
+			</if>
+			<if test="record.totaltraffic != null">
+				totalTraffic = #{record.totaltraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="record.btime != null">
+				bTime = #{record.btime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.etime != null">
+				eTime = #{record.etime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.location != null">
+				location = #{record.location,jdbcType=VARCHAR},
+			</if>
+			<if test="record.transport != null">
+				transport = #{record.transport,jdbcType=VARCHAR},
+			</if>
+			<if test="record.operating != null">
+				operating = #{record.operating,jdbcType=VARCHAR},
+			</if>
+			<if test="record.mark != null">
+				mark = #{record.mark,jdbcType=VARCHAR},
+			</if>
+			<if test="record.createtime != null">
+				createTime = #{record.createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.oid != null">
+				oid = #{record.oid,jdbcType=INTEGER},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="delSends" parameterType="int">
+		update ordermanagementinfo
+		RIGHT join(select id,ordernumber,oncetraffic from
+		sendermanagementinfo) c
+		on ordermanagementinfo.ordernumber =
+		c.ordernumber and c.id = #{id} set
+		remain = oncetraffic + remain
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update sendermanagementinfo
+		set id = #{record.id,jdbcType=INTEGER},
+		orderNumber = #{record.ordernumber,jdbcType=VARCHAR},
+		orderMoney =
+		#{record.ordermoney,jdbcType=DOUBLE},
+		numberPlate =
+		#{record.numberplate,jdbcType=VARCHAR},
+		orderDriver =
+		#{record.orderdriver,jdbcType=VARCHAR},
+		onceTraffic =
+		#{record.oncetraffic,jdbcType=VARCHAR},
+		singleNumber =
+		#{record.singlenumber,jdbcType=VARCHAR},
+		WaybillState =
+		#{record.waybillstate,jdbcType=VARCHAR},
+		totalTraffic =
+		#{record.totaltraffic,jdbcType=VARCHAR},
+		bTime =
+		#{record.btime,jdbcType=TIMESTAMP},
+		eTime =
+		#{record.etime,jdbcType=TIMESTAMP},
+		location =
+		#{record.location,jdbcType=VARCHAR},
+		transport =
+		#{record.transport,jdbcType=VARCHAR},
+		operating =
+		#{record.operating,jdbcType=VARCHAR},
+		mark =
+		#{record.mark,jdbcType=VARCHAR},
+		createTime =
+		#{record.createtime,jdbcType=TIMESTAMP},
+		oid =
+		#{record.oid,jdbcType=INTEGER}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.ndt.entity.Sendermanagementinfo">
+		update sendermanagementinfo
+		<set>
+			<if test="ordernumber != null">
+				orderNumber = #{ordernumber,jdbcType=VARCHAR},
+			</if>
+			<if test="ordermoney != null">
+				orderMoney = #{ordermoney,jdbcType=DOUBLE},
+			</if>
+			<if test="numberplate != null">
+				numberPlate = #{numberplate,jdbcType=VARCHAR},
+			</if>
+			<if test="orderdriver != null">
+				orderDriver = #{orderdriver,jdbcType=VARCHAR},
+			</if>
+			<if test="oncetraffic != null">
+				onceTraffic = #{oncetraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="singlenumber != null">
+				singleNumber = #{singlenumber,jdbcType=VARCHAR},
+			</if>
+			<if test="waybillstate != null">
+				WaybillState = #{waybillstate,jdbcType=VARCHAR},
+			</if>
+			<if test="totaltraffic != null">
+				totalTraffic = #{totaltraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="btime != null">
+				bTime = #{btime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="etime != null">
+				eTime = #{etime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="location != null">
+				location = #{location,jdbcType=VARCHAR},
+			</if>
+			<if test="transport != null">
+				transport = #{transport,jdbcType=VARCHAR},
+			</if>
+			<if test="operating != null">
+				operating = #{operating,jdbcType=VARCHAR},
+			</if>
+			<if test="mark != null">
+				mark = #{mark,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="oid != null">
+				oid = #{oid,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ndt.entity.Sendermanagementinfo">
+		update sendermanagementinfo
+		set orderNumber =
+		#{ordernumber,jdbcType=VARCHAR},
+		orderMoney =
+		#{ordermoney,jdbcType=DOUBLE},
+		numberPlate =
+		#{numberplate,jdbcType=VARCHAR},
+		orderDriver =
+		#{orderdriver,jdbcType=VARCHAR},
+		onceTraffic =
+		#{oncetraffic,jdbcType=VARCHAR},
+		singleNumber =
+		#{singlenumber,jdbcType=VARCHAR},
+		WaybillState =
+		#{waybillstate,jdbcType=VARCHAR},
+		totalTraffic =
+		#{totaltraffic,jdbcType=VARCHAR},
+		bTime = #{btime,jdbcType=TIMESTAMP},
+		eTime = #{etime,jdbcType=TIMESTAMP},
+		location =
+		#{location,jdbcType=VARCHAR},
+		transport =
+		#{transport,jdbcType=VARCHAR},
+		operating =
+		#{operating,jdbcType=VARCHAR},
+		mark = #{mark,jdbcType=VARCHAR},
+		createTime = #{createtime,jdbcType=TIMESTAMP},
+		oid =
+		#{oid,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

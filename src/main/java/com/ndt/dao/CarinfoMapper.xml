@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ndt.dao.CarinfoMapper">
+	<resultMap id="BaseResultMap" type="com.ndt.entity.Carinfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="numberPlate" jdbcType="VARCHAR"
+			property="numberplate" />
+		<result column="plateType" jdbcType="VARCHAR"
+			property="platetype" />
+		<result column="plateColor" jdbcType="VARCHAR"
+			property="platecolor" />
+		<result column="carType" jdbcType="VARCHAR" property="cartype" />
+		<result column="carLength" jdbcType="DOUBLE"
+			property="carlength" />
+		<result column="fullLoad" jdbcType="DOUBLE" property="fullload" />
+		<result column="maxLoad" jdbcType="DOUBLE" property="maxload" />
+		<result column="roadTransportCertificate" jdbcType="VARCHAR"
+			property="roadtransportcertificate" />
+		<result column="businessName" jdbcType="VARCHAR"
+			property="businessname" />
+		<result column="businessTel" jdbcType="VARCHAR"
+			property="businesstel" />
+		<result column="businessLicense" jdbcType="VARCHAR"
+			property="businesslicense" />
+		<result column="brandModel" jdbcType="VARCHAR"
+			property="brandmodel" />
+		<result column="createTime" jdbcType="TIMESTAMP"
+			property="createtime" />
+		<result column="DrivingLicensePath" jdbcType="VARCHAR"
+			property="drivinglicensepath" />
+		<result column="operatingLicencePath" jdbcType="VARCHAR"
+			property="operatinglicencepath" />
+		<result column="cid" jdbcType="INTEGER" property="cid" />
+		<result column="mark" jdbcType="VARCHAR" property="mark" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, numberPlate, plateType, plateColor, carType, carLength, fullLoad,
+		maxLoad, roadTransportCertificate,
+		businessName, businessTel, businessLicense, brandModel, createTime,
+		DrivingLicensePath,
+		operatingLicencePath, cid, mark
+	</sql>
+	<select id="selectByExample"
+		parameterType="com.ndt.entity.CarinfoExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from carinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		<if test="offset != null &amp;&amp; limit != 0">
+			limit ${offset},${limit}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from carinfo
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from carinfo
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="com.ndt.entity.CarinfoExample">
+		delete from carinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<delete id="deleteByIds" parameterType="int">
+		delete from carinfo where
+		id in
+		<foreach collection="array" item="item" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<insert id="insert" parameterType="com.ndt.entity.Carinfo">
+		insert into carinfo (id, numberPlate, plateType,
+		plateColor, carType, carLength,
+		fullLoad, maxLoad, roadTransportCertificate,
+		businessName, businessTel, businessLicense,
+		brandModel, createTime, DrivingLicensePath,
+		operatingLicencePath, cid, mark
+		)
+		values (#{id,jdbcType=INTEGER}, #{numberplate,jdbcType=VARCHAR},
+		#{platetype,jdbcType=VARCHAR},
+		#{platecolor,jdbcType=VARCHAR}, #{cartype,jdbcType=VARCHAR}, #{carlength,jdbcType=DOUBLE},
+		#{fullload,jdbcType=DOUBLE}, #{maxload,jdbcType=DOUBLE},
+		#{roadtransportcertificate,jdbcType=VARCHAR},
+		#{businessname,jdbcType=VARCHAR}, #{businesstel,jdbcType=VARCHAR},
+		#{businesslicense,jdbcType=VARCHAR},
+		#{brandmodel,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
+		#{drivinglicensepath,jdbcType=VARCHAR},
+		#{operatinglicencepath,jdbcType=VARCHAR}, #{cid,jdbcType=INTEGER},
+		#{mark,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ndt.entity.Carinfo">
+		insert into carinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="numberplate != null">
+				numberPlate,
+			</if>
+			<if test="platetype != null">
+				plateType,
+			</if>
+			<if test="platecolor != null">
+				plateColor,
+			</if>
+			<if test="cartype != null">
+				carType,
+			</if>
+			<if test="carlength != null">
+				carLength,
+			</if>
+			<if test="fullload != null">
+				fullLoad,
+			</if>
+			<if test="maxload != null">
+				maxLoad,
+			</if>
+			<if test="roadtransportcertificate != null">
+				roadTransportCertificate,
+			</if>
+			<if test="businessname != null">
+				businessName,
+			</if>
+			<if test="businesstel != null">
+				businessTel,
+			</if>
+			<if test="businesslicense != null">
+				businessLicense,
+			</if>
+			<if test="brandmodel != null">
+				brandModel,
+			</if>
+			<if test="createtime != null">
+				createTime,
+			</if>
+			<if test="drivinglicensepath != null">
+				DrivingLicensePath,
+			</if>
+			<if test="operatinglicencepath != null">
+				operatingLicencePath,
+			</if>
+			<if test="cid != null">
+				cid,
+			</if>
+			<if test="mark != null">
+				mark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="numberplate != null">
+				#{numberplate,jdbcType=VARCHAR},
+			</if>
+			<if test="platetype != null">
+				#{platetype,jdbcType=VARCHAR},
+			</if>
+			<if test="platecolor != null">
+				#{platecolor,jdbcType=VARCHAR},
+			</if>
+			<if test="cartype != null">
+				#{cartype,jdbcType=VARCHAR},
+			</if>
+			<if test="carlength != null">
+				#{carlength,jdbcType=DOUBLE},
+			</if>
+			<if test="fullload != null">
+				#{fullload,jdbcType=DOUBLE},
+			</if>
+			<if test="maxload != null">
+				#{maxload,jdbcType=DOUBLE},
+			</if>
+			<if test="roadtransportcertificate != null">
+				#{roadtransportcertificate,jdbcType=VARCHAR},
+			</if>
+			<if test="businessname != null">
+				#{businessname,jdbcType=VARCHAR},
+			</if>
+			<if test="businesstel != null">
+				#{businesstel,jdbcType=VARCHAR},
+			</if>
+			<if test="businesslicense != null">
+				#{businesslicense,jdbcType=VARCHAR},
+			</if>
+			<if test="brandmodel != null">
+				#{brandmodel,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="drivinglicensepath != null">
+				#{drivinglicensepath,jdbcType=VARCHAR},
+			</if>
+			<if test="operatinglicencepath != null">
+				#{operatinglicencepath,jdbcType=VARCHAR},
+			</if>
+			<if test="cid != null">
+				#{cid,jdbcType=INTEGER},
+			</if>
+			<if test="mark != null">
+				#{mark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="com.ndt.entity.CarinfoExample"
+		resultType="java.lang.Long">
+		select count(*) from carinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update carinfo
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=INTEGER},
+			</if>
+			<if test="record.numberplate != null">
+				numberPlate = #{record.numberplate,jdbcType=VARCHAR},
+			</if>
+			<if test="record.platetype != null">
+				plateType = #{record.platetype,jdbcType=VARCHAR},
+			</if>
+			<if test="record.platecolor != null">
+				plateColor = #{record.platecolor,jdbcType=VARCHAR},
+			</if>
+			<if test="record.cartype != null">
+				carType = #{record.cartype,jdbcType=VARCHAR},
+			</if>
+			<if test="record.carlength != null">
+				carLength = #{record.carlength,jdbcType=DOUBLE},
+			</if>
+			<if test="record.fullload != null">
+				fullLoad = #{record.fullload,jdbcType=DOUBLE},
+			</if>
+			<if test="record.maxload != null">
+				maxLoad = #{record.maxload,jdbcType=DOUBLE},
+			</if>
+			<if test="record.roadtransportcertificate != null">
+				roadTransportCertificate = #{record.roadtransportcertificate,jdbcType=VARCHAR},
+			</if>
+			<if test="record.businessname != null">
+				businessName = #{record.businessname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.businesstel != null">
+				businessTel = #{record.businesstel,jdbcType=VARCHAR},
+			</if>
+			<if test="record.businesslicense != null">
+				businessLicense = #{record.businesslicense,jdbcType=VARCHAR},
+			</if>
+			<if test="record.brandmodel != null">
+				brandModel = #{record.brandmodel,jdbcType=VARCHAR},
+			</if>
+			<if test="record.createtime != null">
+				createTime = #{record.createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.drivinglicensepath != null">
+				DrivingLicensePath = #{record.drivinglicensepath,jdbcType=VARCHAR},
+			</if>
+			<if test="record.operatinglicencepath != null">
+				operatingLicencePath = #{record.operatinglicencepath,jdbcType=VARCHAR},
+			</if>
+			<if test="record.cid != null">
+				cid = #{record.cid,jdbcType=INTEGER},
+			</if>
+			<if test="record.mark != null">
+				mark = #{record.mark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update carinfo
+		set id = #{record.id,jdbcType=INTEGER},
+		numberPlate = #{record.numberplate,jdbcType=VARCHAR},
+		plateType = #{record.platetype,jdbcType=VARCHAR},
+		plateColor = #{record.platecolor,jdbcType=VARCHAR},
+		carType = #{record.cartype,jdbcType=VARCHAR},
+		carLength = #{record.carlength,jdbcType=DOUBLE},
+		fullLoad = #{record.fullload,jdbcType=DOUBLE},
+		maxLoad = #{record.maxload,jdbcType=DOUBLE},
+		roadTransportCertificate = #{record.roadtransportcertificate,jdbcType=VARCHAR},
+		businessName = #{record.businessname,jdbcType=VARCHAR},
+		businessTel = #{record.businesstel,jdbcType=VARCHAR},
+		businessLicense = #{record.businesslicense,jdbcType=VARCHAR},
+		brandModel = #{record.brandmodel,jdbcType=VARCHAR},
+		createTime = #{record.createtime,jdbcType=TIMESTAMP},
+		DrivingLicensePath = #{record.drivinglicensepath,jdbcType=VARCHAR},
+		operatingLicencePath = #{record.operatinglicencepath,jdbcType=VARCHAR},
+		cid = #{record.cid,jdbcType=INTEGER},
+		mark = #{record.mark,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.ndt.entity.Carinfo">
+		update carinfo
+		<set>
+			<if test="numberplate != null">
+				numberPlate = #{numberplate,jdbcType=VARCHAR},
+			</if>
+			<if test="platetype != null">
+				plateType = #{platetype,jdbcType=VARCHAR},
+			</if>
+			<if test="platecolor != null">
+				plateColor = #{platecolor,jdbcType=VARCHAR},
+			</if>
+			<if test="cartype != null">
+				carType = #{cartype,jdbcType=VARCHAR},
+			</if>
+			<if test="carlength != null">
+				carLength = #{carlength,jdbcType=DOUBLE},
+			</if>
+			<if test="fullload != null">
+				fullLoad = #{fullload,jdbcType=DOUBLE},
+			</if>
+			<if test="maxload != null">
+				maxLoad = #{maxload,jdbcType=DOUBLE},
+			</if>
+			<if test="roadtransportcertificate != null">
+				roadTransportCertificate = #{roadtransportcertificate,jdbcType=VARCHAR},
+			</if>
+			<if test="businessname != null">
+				businessName = #{businessname,jdbcType=VARCHAR},
+			</if>
+			<if test="businesstel != null">
+				businessTel = #{businesstel,jdbcType=VARCHAR},
+			</if>
+			<if test="businesslicense != null">
+				businessLicense = #{businesslicense,jdbcType=VARCHAR},
+			</if>
+			<if test="brandmodel != null">
+				brandModel = #{brandmodel,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="drivinglicensepath != null">
+				DrivingLicensePath = #{drivinglicensepath,jdbcType=VARCHAR},
+			</if>
+			<if test="operatinglicencepath != null">
+				operatingLicencePath = #{operatinglicencepath,jdbcType=VARCHAR},
+			</if>
+			<if test="cid != null">
+				cid = #{cid,jdbcType=INTEGER},
+			</if>
+			<if test="mark != null">
+				mark = #{mark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ndt.entity.Carinfo">
+		update carinfo
+		set numberPlate = #{numberplate,jdbcType=VARCHAR},
+		plateType = #{platetype,jdbcType=VARCHAR},
+		plateColor = #{platecolor,jdbcType=VARCHAR},
+		carType = #{cartype,jdbcType=VARCHAR},
+		carLength = #{carlength,jdbcType=DOUBLE},
+		fullLoad = #{fullload,jdbcType=DOUBLE},
+		maxLoad = #{maxload,jdbcType=DOUBLE},
+		roadTransportCertificate = #{roadtransportcertificate,jdbcType=VARCHAR},
+		businessName = #{businessname,jdbcType=VARCHAR},
+		businessTel = #{businesstel,jdbcType=VARCHAR},
+		businessLicense = #{businesslicense,jdbcType=VARCHAR},
+		brandModel = #{brandmodel,jdbcType=VARCHAR},
+		createTime = #{createtime,jdbcType=TIMESTAMP},
+		DrivingLicensePath = #{drivinglicensepath,jdbcType=VARCHAR},
+		operatingLicencePath = #{operatinglicencepath,jdbcType=VARCHAR},
+		cid = #{cid,jdbcType=INTEGER},
+		mark = #{mark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateDriverCar">
+		update carinfo set cid=null where cid = #{id}
+	</update>
+</mapper>

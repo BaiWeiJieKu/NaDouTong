@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ndt.dao.OrdermanagementinfoMapper">
+	<resultMap id="BaseResultMap"
+		type="com.ndt.entity.Ordermanagementinfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="dispatchedParty" jdbcType="VARCHAR"
+			property="dispatchedparty" />
+		<result column="carrier" jdbcType="VARCHAR" property="carrier" />
+		<result column="departure" jdbcType="VARCHAR"
+			property="departure" />
+		<result column="destination" jdbcType="VARCHAR"
+			property="destination" />
+		<result column="senderName" jdbcType="VARCHAR"
+			property="sendername" />
+		<result column="senderTel" jdbcType="VARCHAR"
+			property="sendertel" />
+		<result column="receiverName" jdbcType="VARCHAR"
+			property="receivername" />
+		<result column="receiverTel" jdbcType="VARCHAR"
+			property="receivertel" />
+		<result column="orderNumber" jdbcType="VARCHAR"
+			property="ordernumber" />
+		<result column="orderCreateTime" jdbcType="TIMESTAMP"
+			property="ordercreatetime" />
+		<result column="totalTraffic" jdbcType="VARCHAR"
+			property="totaltraffic" />
+		<result column="remain" jdbcType="VARCHAR" property="remain" />
+		<result column="volume" jdbcType="VARCHAR" property="volume" />
+		<result column="contractRote" jdbcType="VARCHAR"
+			property="contractrote" />
+		<result column="gid" jdbcType="VARCHAR" property="gid" />
+		<result column="mark" jdbcType="VARCHAR" property="mark" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, dispatchedParty, carrier, departure, destination, senderName,
+		senderTel, receiverName,
+		receiverTel, orderNumber, orderCreateTime, totalTraffic, remain, volume,
+		contractRote,
+		gid, mark
+	</sql>
+	<select id="selectByExample"
+		parameterType="com.ndt.entity.OrdermanagementinfoExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from ordermanagementinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ordermanagementinfo
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByMaxId" resultMap="BaseResultMap">
+		SELECT * FROM ordermanagementinfo ORDER BY id DESC LIMIT 0,1
+	</select>
+	<select id="selectAll" resultType="java.util.HashMap">
+
+		select ordermanagementinfo.*,goodsinfo.goodsname,goodsinfo.goodstype
+		from ordermanagementinfo,goodsinfo
+		<where>
+			and ordermanagementinfo.gid=goodsinfo.id
+			<if test="goodsname!=null &amp;&amp; goodsname!=&quot;&quot;">
+				and ordermanagementinfo.gid=#{goodsname}
+			</if>
+			<if test="ordernumber!=null &amp;&amp; ordernumber!=&quot;&quot;">
+				and ordermanagementinfo.ordernumber=#{ordernumber}
+			</if>
+
+			<if test="start!=null &amp;&amp; start!=&quot;&quot;">
+				and ordermanagementinfo.orderCreateTime&gt;=#{start}
+			</if>
+			<if test="end!=null &amp;&amp; end!=&quot;&quot;">
+				and ordermanagementinfo.orderCreateTime &lt;=#{end}
+			</if>
+			<if test="departure!=null &amp;&amp; departure!=&quot;&quot;">
+				and ordermanagementinfo.departure like #{departure}
+			</if>
+			<if test="destination!=null &amp;&amp; destination!=&quot;&quot;">
+				and ordermanagementinfo.destination like #{destination}
+			</if>
+		</where>
+		order by id desc limit #{pages},15
+	</select>
+	<select id="selectCount" resultType="Integer">
+
+		select count(*) from ordermanagementinfo,goodsinfo
+		<where>
+			and ordermanagementinfo.gid=goodsinfo.id
+			<if test="goodsname!=null &amp;&amp; goodsname!=&quot;&quot;">
+				and ordermanagementinfo.gid=#{goodsname}
+			</if>
+			<if test="ordernumber!=null &amp;&amp; ordernumber!=&quot;&quot;">
+				and ordermanagementinfo.ordernumber=#{ordernumber}
+			</if>
+
+			<if test="start!=null &amp;&amp; start!=&quot;&quot;">
+				and ordermanagementinfo.orderCreateTime&gt;=#{start}
+			</if>
+			<if test="end!=null &amp;&amp; end!=&quot;&quot;">
+				and ordermanagementinfo.orderCreateTime &lt;=#{end}
+			</if>
+			<if test="departure!=null &amp;&amp; departure!=&quot;&quot;">
+				and ordermanagementinfo.departure=#{departure}
+			</if>
+			<if test="destination!=null &amp;&amp; destination!=&quot;&quot;">
+				and ordermanagementinfo.destination=#{destination}
+			</if>
+
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from ordermanagementinfo
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="com.ndt.entity.OrdermanagementinfoExample">
+		delete from ordermanagementinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<delete id="deleteByArray" parameterType="int">
+		delete from ordermanagementinfo where
+		id in
+		<foreach collection="array" item="item" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<insert id="insert"
+		parameterType="com.ndt.entity.Ordermanagementinfo">
+		insert into ordermanagementinfo (id, dispatchedParty, carrier,
+		departure, destination, senderName,
+		senderTel, receiverName, receiverTel,
+		orderNumber, orderCreateTime, totalTraffic,
+		remain, volume, contractRote,
+		gid, mark)
+		values (#{id,jdbcType=INTEGER}, #{dispatchedparty,jdbcType=VARCHAR},
+		#{carrier,jdbcType=VARCHAR},
+		#{departure,jdbcType=VARCHAR}, #{destination,jdbcType=VARCHAR}, #{sendername,jdbcType=VARCHAR},
+		#{sendertel,jdbcType=VARCHAR}, #{receivername,jdbcType=VARCHAR},
+		#{receivertel,jdbcType=VARCHAR},
+		#{ordernumber,jdbcType=VARCHAR}, #{ordercreatetime,jdbcType=TIMESTAMP},
+		#{totaltraffic,jdbcType=VARCHAR},
+		#{remain,jdbcType=VARCHAR}, #{volume,jdbcType=VARCHAR}, #{contractrote,jdbcType=VARCHAR},
+		#{gid,jdbcType=VARCHAR}, #{mark,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ndt.entity.Ordermanagementinfo">
+		insert into ordermanagementinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="dispatchedparty != null">
+				dispatchedParty,
+			</if>
+			<if test="carrier != null">
+				carrier,
+			</if>
+			<if test="departure != null">
+				departure,
+			</if>
+			<if test="destination != null">
+				destination,
+			</if>
+			<if test="sendername != null">
+				senderName,
+			</if>
+			<if test="sendertel != null">
+				senderTel,
+			</if>
+			<if test="receivername != null">
+				receiverName,
+			</if>
+			<if test="receivertel != null">
+				receiverTel,
+			</if>
+			<if test="ordernumber != null">
+				orderNumber,
+			</if>
+			<if test="ordercreatetime != null">
+				orderCreateTime,
+			</if>
+			<if test="totaltraffic != null">
+				totalTraffic,
+			</if>
+			<if test="remain != null">
+				remain,
+			</if>
+			<if test="volume != null">
+				volume,
+			</if>
+			<if test="contractrote != null">
+				contractRote,
+			</if>
+			<if test="gid != null">
+				gid,
+			</if>
+			<if test="mark != null">
+				mark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="dispatchedparty != null">
+				#{dispatchedparty,jdbcType=VARCHAR},
+			</if>
+			<if test="carrier != null">
+				#{carrier,jdbcType=VARCHAR},
+			</if>
+			<if test="departure != null">
+				#{departure,jdbcType=VARCHAR},
+			</if>
+			<if test="destination != null">
+				#{destination,jdbcType=VARCHAR},
+			</if>
+			<if test="sendername != null">
+				#{sendername,jdbcType=VARCHAR},
+			</if>
+			<if test="sendertel != null">
+				#{sendertel,jdbcType=VARCHAR},
+			</if>
+			<if test="receivername != null">
+				#{receivername,jdbcType=VARCHAR},
+			</if>
+			<if test="receivertel != null">
+				#{receivertel,jdbcType=VARCHAR},
+			</if>
+			<if test="ordernumber != null">
+				#{ordernumber,jdbcType=VARCHAR},
+			</if>
+			<if test="ordercreatetime != null">
+				#{ordercreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="totaltraffic != null">
+				#{totaltraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="remain != null">
+				#{remain,jdbcType=VARCHAR},
+			</if>
+			<if test="volume != null">
+				#{volume,jdbcType=VARCHAR},
+			</if>
+			<if test="contractrote != null">
+				#{contractrote,jdbcType=VARCHAR},
+			</if>
+			<if test="gid != null">
+				#{gid,jdbcType=VARCHAR},
+			</if>
+			<if test="mark != null">
+				#{mark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="com.ndt.entity.OrdermanagementinfoExample"
+		resultType="java.lang.Long">
+		select count(*) from ordermanagementinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update ordermanagementinfo
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=INTEGER},
+			</if>
+			<if test="record.dispatchedparty != null">
+				dispatchedParty = #{record.dispatchedparty,jdbcType=VARCHAR},
+			</if>
+			<if test="record.carrier != null">
+				carrier = #{record.carrier,jdbcType=VARCHAR},
+			</if>
+			<if test="record.departure != null">
+				departure = #{record.departure,jdbcType=VARCHAR},
+			</if>
+			<if test="record.destination != null">
+				destination = #{record.destination,jdbcType=VARCHAR},
+			</if>
+			<if test="record.sendername != null">
+				senderName = #{record.sendername,jdbcType=VARCHAR},
+			</if>
+			<if test="record.sendertel != null">
+				senderTel = #{record.sendertel,jdbcType=VARCHAR},
+			</if>
+			<if test="record.receivername != null">
+				receiverName = #{record.receivername,jdbcType=VARCHAR},
+			</if>
+			<if test="record.receivertel != null">
+				receiverTel = #{record.receivertel,jdbcType=VARCHAR},
+			</if>
+			<if test="record.ordernumber != null">
+				orderNumber = #{record.ordernumber,jdbcType=VARCHAR},
+			</if>
+			<if test="record.ordercreatetime != null">
+				orderCreateTime = #{record.ordercreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="record.totaltraffic != null">
+				totalTraffic = #{record.totaltraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="record.remain != null">
+				remain = #{record.remain,jdbcType=VARCHAR},
+			</if>
+			<if test="record.volume != null">
+				volume = #{record.volume,jdbcType=VARCHAR},
+			</if>
+			<if test="record.contractrote != null">
+				contractRote = #{record.contractrote,jdbcType=VARCHAR},
+			</if>
+			<if test="record.gid != null">
+				gid = #{record.gid,jdbcType=VARCHAR},
+			</if>
+			<if test="record.mark != null">
+				mark = #{record.mark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update ordermanagementinfo
+		set id = #{record.id,jdbcType=INTEGER},
+		dispatchedParty = #{record.dispatchedparty,jdbcType=VARCHAR},
+		carrier = #{record.carrier,jdbcType=VARCHAR},
+		departure = #{record.departure,jdbcType=VARCHAR},
+		destination = #{record.destination,jdbcType=VARCHAR},
+		senderName = #{record.sendername,jdbcType=VARCHAR},
+		senderTel = #{record.sendertel,jdbcType=VARCHAR},
+		receiverName = #{record.receivername,jdbcType=VARCHAR},
+		receiverTel = #{record.receivertel,jdbcType=VARCHAR},
+		orderNumber = #{record.ordernumber,jdbcType=VARCHAR},
+		orderCreateTime = #{record.ordercreatetime,jdbcType=TIMESTAMP},
+		totalTraffic = #{record.totaltraffic,jdbcType=VARCHAR},
+		remain = #{record.remain,jdbcType=VARCHAR},
+		volume = #{record.volume,jdbcType=VARCHAR},
+		contractRote = #{record.contractrote,jdbcType=VARCHAR},
+		gid = #{record.gid,jdbcType=VARCHAR},
+		mark = #{record.mark,jdbcType=VARCHAR}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.ndt.entity.Ordermanagementinfo">
+		update ordermanagementinfo
+		<set>
+			<if test="dispatchedparty != null">
+				dispatchedParty = #{dispatchedparty,jdbcType=VARCHAR},
+			</if>
+			<if test="carrier != null">
+				carrier = #{carrier,jdbcType=VARCHAR},
+			</if>
+			<if test="departure != null">
+				departure = #{departure,jdbcType=VARCHAR},
+			</if>
+			<if test="destination != null">
+				destination = #{destination,jdbcType=VARCHAR},
+			</if>
+			<if test="sendername != null">
+				senderName = #{sendername,jdbcType=VARCHAR},
+			</if>
+			<if test="sendertel != null">
+				senderTel = #{sendertel,jdbcType=VARCHAR},
+			</if>
+			<if test="receivername != null">
+				receiverName = #{receivername,jdbcType=VARCHAR},
+			</if>
+			<if test="receivertel != null">
+				receiverTel = #{receivertel,jdbcType=VARCHAR},
+			</if>
+			<if test="ordernumber != null">
+				orderNumber = #{ordernumber,jdbcType=VARCHAR},
+			</if>
+			<if test="ordercreatetime != null">
+				orderCreateTime = #{ordercreatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="totaltraffic != null">
+				totalTraffic = #{totaltraffic,jdbcType=VARCHAR},
+			</if>
+			<if test="remain != null">
+				remain = #{remain,jdbcType=VARCHAR},
+			</if>
+			<if test="volume != null">
+				volume = #{volume,jdbcType=VARCHAR},
+			</if>
+			<if test="contractrote != null">
+				contractRote = #{contractrote,jdbcType=VARCHAR},
+			</if>
+			<if test="gid != null">
+				gid = #{gid,jdbcType=VARCHAR},
+			</if>
+			<if test="mark != null">
+				mark = #{mark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ndt.entity.Ordermanagementinfo">
+		update ordermanagementinfo
+		set dispatchedParty = #{dispatchedparty,jdbcType=VARCHAR},
+		carrier = #{carrier,jdbcType=VARCHAR},
+		departure = #{departure,jdbcType=VARCHAR},
+		destination = #{destination,jdbcType=VARCHAR},
+		senderName = #{sendername,jdbcType=VARCHAR},
+		senderTel = #{sendertel,jdbcType=VARCHAR},
+		receiverName = #{receivername,jdbcType=VARCHAR},
+		receiverTel = #{receivertel,jdbcType=VARCHAR},
+		orderNumber = #{ordernumber,jdbcType=VARCHAR},
+		orderCreateTime = #{ordercreatetime,jdbcType=TIMESTAMP},
+		totalTraffic = #{totaltraffic,jdbcType=VARCHAR},
+		remain = #{remain,jdbcType=VARCHAR},
+		volume = #{volume,jdbcType=VARCHAR},
+		contractRote = #{contractrote,jdbcType=VARCHAR},
+		gid = #{gid,jdbcType=VARCHAR},
+		mark = #{mark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

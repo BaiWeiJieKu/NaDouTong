@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ndt.dao.GoodsinfoMapper">
+	<resultMap id="BaseResultMap" type="com.ndt.entity.Goodsinfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="goodsType" jdbcType="VARCHAR"
+			property="goodstype" />
+		<result column="goodsName" jdbcType="VARCHAR"
+			property="goodsname" />
+		<result column="mark" jdbcType="VARCHAR" property="mark" />
+		<result column="creatTime" jdbcType="TIMESTAMP"
+			property="creattime" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria"
+				separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" prefixOverrides="and" suffix=")">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and
+									#{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach close=")" collection="criterion.value"
+										item="listItem" open="(" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		id, goodsType, goodsName, mark, creatTime
+	</sql>
+	<select id="selectByExample"
+		parameterType="com.ndt.entity.GoodsinfoExample"
+		resultMap="BaseResultMap">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from goodsinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+		<if test="offset != null &amp;&amp; limit != 0">
+			limit ${offset},${limit}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey"
+		parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from goodsinfo
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey"
+		parameterType="java.lang.Integer">
+		delete from goodsinfo
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample"
+		parameterType="com.ndt.entity.GoodsinfoExample">
+		delete from goodsinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<delete id="deleteByArray" parameterType="int">
+		delete from goodsinfo where
+		id in
+		<foreach collection="array" item="item" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<insert id="insert" parameterType="com.ndt.entity.Goodsinfo">
+		insert into goodsinfo (id, goodsType, goodsName,
+		mark, creatTime)
+		values (#{id,jdbcType=INTEGER}, #{goodstype,jdbcType=VARCHAR},
+		#{goodsname,jdbcType=VARCHAR},
+		#{mark,jdbcType=VARCHAR}, #{creattime,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ndt.entity.Goodsinfo">
+		insert into goodsinfo
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="goodstype != null">
+				goodsType,
+			</if>
+			<if test="goodsname != null">
+				goodsName,
+			</if>
+			<if test="mark != null">
+				mark,
+			</if>
+			<if test="creattime != null">
+				creatTime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="goodstype != null">
+				#{goodstype,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsname != null">
+				#{goodsname,jdbcType=VARCHAR},
+			</if>
+			<if test="mark != null">
+				#{mark,jdbcType=VARCHAR},
+			</if>
+			<if test="creattime != null">
+				#{creattime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample"
+		parameterType="com.ndt.entity.GoodsinfoExample"
+		resultType="java.lang.Long">
+		select count(*) from goodsinfo
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update goodsinfo
+		<set>
+			<if test="record.id != null">
+				id = #{record.id,jdbcType=INTEGER},
+			</if>
+			<if test="record.goodstype != null">
+				goodsType = #{record.goodstype,jdbcType=VARCHAR},
+			</if>
+			<if test="record.goodsname != null">
+				goodsName = #{record.goodsname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.mark != null">
+				mark = #{record.mark,jdbcType=VARCHAR},
+			</if>
+			<if test="record.creattime != null">
+				creatTime = #{record.creattime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update goodsinfo
+		set id = #{record.id,jdbcType=INTEGER},
+		goodsType = #{record.goodstype,jdbcType=VARCHAR},
+		goodsName = #{record.goodsname,jdbcType=VARCHAR},
+		mark = #{record.mark,jdbcType=VARCHAR},
+		creatTime = #{record.creattime,jdbcType=TIMESTAMP}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.ndt.entity.Goodsinfo">
+		update goodsinfo
+		<set>
+			<if test="goodstype != null">
+				goodsType = #{goodstype,jdbcType=VARCHAR},
+			</if>
+			<if test="goodsname != null">
+				goodsName = #{goodsname,jdbcType=VARCHAR},
+			</if>
+			<if test="mark != null">
+				mark = #{mark,jdbcType=VARCHAR},
+			</if>
+			<if test="creattime != null">
+				creatTime = #{creattime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ndt.entity.Goodsinfo">
+		update goodsinfo
+		set goodsType = #{goodstype,jdbcType=VARCHAR},
+		goodsName = #{goodsname,jdbcType=VARCHAR},
+		mark = #{mark,jdbcType=VARCHAR},
+		creatTime = #{creattime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>
