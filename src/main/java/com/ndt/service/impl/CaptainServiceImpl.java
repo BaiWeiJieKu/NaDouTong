@@ -56,17 +56,43 @@ public class CaptainServiceImpl implements CaptainService {
 
 	@Override
 	public JsonData altCaptain(Captaininfo captaininfo) {
+		
+		CaptaininfoExample example = new CaptaininfoExample(0, 15);
+		Criteria createCriteria = example.createCriteria();
+		createCriteria.andCaptainnameEqualTo(captaininfo.getCaptainname());
+		createCriteria.andFleetnameEqualTo(captaininfo.getFleetname());
+		List<Captaininfo> selectByExample = captainindoMapper.selectByExample(example);
 
-		int updateByPrimaryKeySelective = captainindoMapper.updateByPrimaryKeySelective(captaininfo);
-		if (updateByPrimaryKeySelective > 0) {
-			return JsonData.success();
-		} else {
-			return JsonData.fail("更新车队信息失败");
+		
+		if(selectByExample.size()>0)
+		{
+			
+			if(selectByExample.get(0).getId()==captaininfo.getId())
+			{
+				int updateByPrimaryKeySelective = captainindoMapper.updateByPrimaryKeySelective(captaininfo);
+				if (updateByPrimaryKeySelective > 0) {
+					return JsonData.success();
+				} else {
+					return JsonData.fail("更新车队信息失败");
+				}
+			}
+			else{
+				return JsonData.fail("车队信息重复");
+			}
+		}
+		else
+		{
+			int updateByPrimaryKeySelective = captainindoMapper.updateByPrimaryKeySelective(captaininfo);
+			if (updateByPrimaryKeySelective > 0) {
+				return JsonData.success();
+			} else {
+				return JsonData.fail("更新车队信息失败");
+			}
 		}
 	}
 
 	@Override
-	public JsonData selectCaptain(Captaininfo captaininfo, Integer page) {
+	public JsonData selectCaptain(Captaininfo captaininfo, Integer page,Date startDate,Date endDate) {
 		if (page == null || page == 0) {
 			page = 1;
 		}
@@ -79,6 +105,9 @@ public class CaptainServiceImpl implements CaptainService {
 		if (captaininfo.getFleetname() != null && !captaininfo.getFleetname().equals("")) {
 			createCriteria.andFleetnameEqualTo(captaininfo.getFleetname());
 		}
+		if(startDate!= null && !startDate.equals("")){
+			createCriteria.andCreatetimeBetween(startDate, endDate);
+		}
 
 		// 查询总条数
 		CaptaininfoExample example2 = new CaptaininfoExample();
@@ -89,8 +118,10 @@ public class CaptainServiceImpl implements CaptainService {
 		if (captaininfo.getFleetname() != null && !captaininfo.getFleetname().equals("")) {
 			createCriteria2.andFleetnameEqualTo(captaininfo.getFleetname());
 		}
+		if(startDate!= null && !startDate.equals("")){
+			createCriteria2.andCreatetimeBetween(startDate, endDate);
+		}
 		long countByExample = captainindoMapper.countByExample(example2);
-
 		List<Captaininfo> selectByExample = captainindoMapper.selectByExample(example);
 
 		PageResult<Captaininfo> pageResult = new PageResult<Captaininfo>(selectByExample, (int) countByExample);

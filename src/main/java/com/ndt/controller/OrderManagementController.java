@@ -1,7 +1,9 @@
-﻿package com.ndt.controller;
+package com.ndt.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,8 +35,10 @@ public class OrderManagementController {
 	@RequestMapping("/api/insertOrderManagement.json")
 	@ResponseBody
 	public JsonData insertOrderManagement(Ordermanagementinfo ordermanagementinfo, String time) throws ParseException {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-dd-mm hh:mm:ss");
+		String format = sdf.format(new Date());
+		ordermanagementinfo.setMark(format);
 		ordermanagementinfo.setOrdercreatetime(DateFormat.getDateFormat(time));
-		System.out.println(ordermanagementinfo);
 		JsonData insertOrderManagement = orderManagement.insertOrderManagement(ordermanagementinfo);
 		return insertOrderManagement;
 
@@ -49,14 +53,14 @@ public class OrderManagementController {
 	 */
 	@RequestMapping(value = { "/api/orderManagement.json" })
 	@ResponseBody
-	public JsonData orderManagement(String ordernumber, String departure, String destination, String page, String gid,
+	public JsonData orderManagement(String dispatchedparty,String ordernumber, String departure, String destination, String page, String gid,
 			String start, String end) throws ParseException {
 		String endTime = DateFormat.getDate(DateFormat.getDateFormat(end));
 		String goodsname = gid;
 		// 起运地和到达地采用模糊查询
 		departure = "%" + departure + "%";
 		destination = "%" + destination + "%";
-		JsonData selectAll = orderManagement.selectAll(ordernumber, departure, destination, page, goodsname, start,
+		JsonData selectAll = orderManagement.selectAll(dispatchedparty,ordernumber, departure, destination, page, goodsname, start,
 				endTime);
 		return selectAll;
 

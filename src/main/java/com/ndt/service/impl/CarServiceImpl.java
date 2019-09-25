@@ -2,6 +2,8 @@ package com.ndt.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ndt.dao.CarinfoMapper;
@@ -74,11 +76,11 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public int selectCarNum(Carinfo car) {
+	public List<Carinfo> selectCarNum(Carinfo car) {
 		// TODO Auto-generated method stub
 		CarinfoExample example = new CarinfoExample();
 		example.createCriteria().andNumberplateEqualTo(car.getNumberplate());
-		return (int) carinfoMapper.countByExample(example);
+		return carinfoMapper.selectByExample(example);
 	}
 
 	@Override
@@ -88,9 +90,17 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public List<Carinfo> getAllCars() {
+	public List<Map<String, Object>> getAllCars() {
+		// TODO Auto-generated method stub
+		
+		return carinfoMapper.getAllCars();
+	}
+
+	@Override
+	public List<Carinfo> selectRoad(Carinfo car) {
 		// TODO Auto-generated method stub
 		CarinfoExample example = new CarinfoExample();
+		example.createCriteria().andRoadtransportcertificateEqualTo(car.getRoadtransportcertificate());
 		return carinfoMapper.selectByExample(example);
 	}
 

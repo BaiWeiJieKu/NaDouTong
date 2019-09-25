@@ -42,7 +42,7 @@ public class DriverServiceImpl implements DriverService {
 	 * 条件查询接口方法
 	 */
 	@Override
-	public List<Map<String, Object>> GetDrivers(Driverinfo driver, String numberplate, Integer page) {
+	public List<Map<String, Object>> GetDrivers(Driverinfo driver, String numberplate, Integer page,Date start,Date end) {
 		// TODO Auto-generated method stub
 		if (page == null || page <= 0) {
 			page = 1;
@@ -72,11 +72,11 @@ public class DriverServiceImpl implements DriverService {
 			numberplate="";
 		}
 		return mapper.getDriversInDriverInfo(driver.getRealname(), driver.getTel(), driver.getIdcard(), driver.getCid(),
-				numberplate, (page - 1) * 15);
+				numberplate, (page - 1) * 15,start,end);
 	}
 
 	@Override
-	public int GetCount(Driverinfo driver, String numberplate) {
+	public int GetCount(Driverinfo driver, String numberplate,Date start,Date end) {
 		// TODO Auto-generated method stub
 		/*
 		 * DriverinfoExample example = new DriverinfoExample(); Criteria createCriteria
@@ -89,7 +89,7 @@ public class DriverServiceImpl implements DriverService {
 		 * (driver.getCid() != null) { createCriteria.andCidEqualTo(driver.getCid()); }
 		 */
 		return (int) mapper.getDriversCountInDriverInfo(driver.getRealname(), driver.getTel(), driver.getIdcard(),
-				driver.getCid(), numberplate);
+				driver.getCid(), numberplate,start,end);
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public List<Driverinfo> getSendDriver() {
+	public List<Map<String,Object>> getSendDriver() {
 		// TODO Auto-generated method stub
 		return mapper.selectDriverStatus();
 	}
@@ -128,13 +128,28 @@ public class DriverServiceImpl implements DriverService {
 	@Override
 	@Transactional
 	public int updateDriverCar(String carid, String id) {
+		Carinfo selectByPrimaryKey = car.selectByPrimaryKey(Integer.parseInt(carid));
+		if(selectByPrimaryKey.getCid()!=null) {
+			Driverinfo selectByPrimaryKey2 = mapper.selectByPrimaryKey(selectByPrimaryKey.getCid());
+			mapper.deleteCar(selectByPrimaryKey2.getId());
+		}
+		
 		// TODO Auto-generated method stub
 		int count = car.updateDriverCar(Integer.parseInt(id));
 		Carinfo carinfo = new Carinfo();
 		carinfo.setId(Integer.parseInt(carid));
 		carinfo.setCid(Integer.parseInt(id));
 		int updateByPrimaryKeySelective = car.updateByPrimaryKeySelective(carinfo);
-		return updateByPrimaryKeySelective > 0 ? 1 : 0;
+		if(updateByPrimaryKeySelective>0)
+		{
+			int updateDriverAndCar = car.updateDriverAndCar();
+			return updateDriverAndCar > 0 ? 1 : 0;
+		}
+		else {
+			return 0;
+		}
+		
+		
 	}
 
 }

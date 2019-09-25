@@ -1,5 +1,7 @@
 package com.ndt.service;
 
+import java.util.Date;
+
 import com.ndt.entity.Goodsinfo;
 import com.ndt.util.JsonData;
 
@@ -35,7 +37,7 @@ public interface GoodsService {
 	 * @param goodsinfo
 	 * @return
 	 */
-	public JsonData selectGoods(Goodsinfo goodsinfo, Integer page);
+	public JsonData selectGoods(Goodsinfo goodsinfo, Integer page,Date startDate,Date endDate);
 
 	public JsonData source();
 

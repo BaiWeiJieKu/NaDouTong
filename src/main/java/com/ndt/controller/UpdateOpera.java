@@ -2,6 +2,7 @@ package com.ndt.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +38,12 @@ public class UpdateOpera {
 	    public JsonData OperatingLicencePath(HttpServletRequest request, HttpServletResponse response) throws IOException {  
 		MultipartHttpServletRequest req =(MultipartHttpServletRequest)request;
 			MultipartFile multipartFile =  req.getFile("uploadfile_ant6"); //对应前端页面的name值
+			request.setCharacterEncoding("UTF-8");
+			response.setContentType("text/html;charset=UTF-8");
 			String path=request.getSession().getServletContext().getRealPath("/image/");
 			String tel=request.getParameter("tel").toString().trim();
 	        String realname=request.getParameter("realname").toString().trim();
+	        realname=URLDecoder.decode(realname, "UTF-8");//解码
 			File dir = new File(path);
 			if (!dir.exists()) {
 				 dir.mkdir();
@@ -52,7 +56,7 @@ public class UpdateOpera {
 	       Mobileregistry mobileregistry=new Mobileregistry();
 	       mobileregistry.setRealname(realname);
 	       mobileregistry.setTel(tel);
-	       mobileregistry.setOperatinglicencepath(path+picName);
+	       mobileregistry.setOperatinglicencepath("/image/"+picName);
 	       JsonData json=mobileregistryservice.updateOperating(mobileregistry);
 	        return json;
 		        

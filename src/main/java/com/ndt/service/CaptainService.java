@@ -1,5 +1,6 @@
 package com.ndt.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ndt.entity.Captaininfo;
@@ -37,7 +38,7 @@ public interface CaptainService {
 	 * @param captaininfo
 	 * @return
 	 */
-	public JsonData selectCaptain(Captaininfo captaininfo, Integer page);
+	public JsonData selectCaptain(Captaininfo captaininfo, Integer page,Date startDate,Date endDate);
 
 	public List<Captaininfo> selectDriversTeam();
 

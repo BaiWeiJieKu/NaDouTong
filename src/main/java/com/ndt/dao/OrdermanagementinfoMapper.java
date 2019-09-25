@@ -26,11 +26,11 @@ public interface OrdermanagementinfoMapper {
 
 	Ordermanagementinfo selectByMaxId();
 
-	List<Map<String, Object>> selectAll(@Param("ordernumber") String ordernumber, @Param("departure") String departure,
+	List<Map<String, Object>> selectAll(@Param("dispatchedparty") String dispatchedparty,@Param("ordernumber") String ordernumber, @Param("departure") String departure,
 			@Param("destination") String destination, @Param("goodsname") String goodsname,
 			@Param("start") String start, @Param("end") String end, @Param("pages") int pages);
 
-	int selectCount(@Param("ordernumber") String ordernumber, @Param("departure") String departure,
+	int selectCount(@Param("dispatchedparty") String dispatchedparty,@Param("ordernumber") String ordernumber, @Param("departure") String departure,
 			@Param("destination") String destination, @Param("goodsname") String goodsname,
 			@Param("start") String start, @Param("end") String end);
 

@@ -1,5 +1,6 @@
 package com.ndt.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,11 +10,11 @@ public interface DriverService {
 
 	List<Driverinfo> GetAllDriver();
 
-	List<Driverinfo> getSendDriver();
+	List<Map<String,Object>> getSendDriver();
 
-	List<Map<String ,Object>> GetDrivers(Driverinfo driver,String numberplate, Integer page);
+	List<Map<String ,Object>> GetDrivers(Driverinfo driver,String numberplate, Integer page,Date start,Date end);
 
-	int GetCount(Driverinfo driver,String numberplate);
+	int GetCount(Driverinfo driver,String numberplate,Date start,Date end);
 
 	int InsertDriver(Driverinfo driver);
 

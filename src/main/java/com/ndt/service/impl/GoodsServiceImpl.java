@@ -53,16 +53,38 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Override
 	public JsonData altGoods(Goodsinfo goodsinfo) {
-		int updateByPrimaryKeySelective = goodsinfoMapper.updateByPrimaryKeySelective(goodsinfo);
-		if (updateByPrimaryKeySelective > 0) {
-			return JsonData.success();
-		} else {
-			return JsonData.fail("更新失败");
+		//查重
+		GoodsinfoExample example=new GoodsinfoExample();
+		example.createCriteria().andGoodsnameEqualTo(goodsinfo.getGoodsname());
+		List<Goodsinfo> selectByExample = goodsinfoMapper.selectByExample(example);
+		if(selectByExample.size()>0)
+		{
+			if(selectByExample.get(0).getId()==goodsinfo.getId()&& selectByExample.get(0).getGoodsname().equals(goodsinfo.getGoodsname())){
+				int updateByPrimaryKeySelective = goodsinfoMapper.updateByPrimaryKeySelective(goodsinfo);
+				if (updateByPrimaryKeySelective > 0) {
+					return JsonData.success();
+				} else {
+					return JsonData.fail("货物名称重复");
+				}
+			}
+			else{
+				return JsonData.fail("无法更新，请检查");
+			}
+		}
+		else
+		{
+			
+			int updateByPrimaryKeySelective = goodsinfoMapper.updateByPrimaryKeySelective(goodsinfo);
+			if (updateByPrimaryKeySelective > 0) {
+				return JsonData.success();
+			} else {
+				return JsonData.fail("更新失败");
+			}
 		}
 	}
 
 	@Override
-	public JsonData selectGoods(Goodsinfo goodsinfo, Integer page) {
+	public JsonData selectGoods(Goodsinfo goodsinfo, Integer page,Date startDate,Date endDate) {
 		if (page == null || page == 0) {
 			page = 1;
 		}
@@ -72,6 +94,9 @@ public class GoodsServiceImpl implements GoodsService {
 		if (goodsinfo.getGoodsname() != null && !goodsinfo.getGoodsname().equals("")) {
 			createCriteria.andGoodsnameLike("%" + goodsinfo.getGoodsname() + "%");
 		}
+		if(startDate!= null && !startDate.equals("")){
+			createCriteria.andCreattimeBetween(startDate, endDate);
+		}
 		List<Goodsinfo> selectByExample = goodsinfoMapper.selectByExample(example);
 
 		// 查询数据条数
@@ -79,6 +104,9 @@ public class GoodsServiceImpl implements GoodsService {
 		Criteria createCriteria2 = example2.createCriteria();
 		if (goodsinfo.getGoodsname() != null && !goodsinfo.getGoodsname().equals("")) {
 			createCriteria2.andGoodsnameLike("%" + goodsinfo.getGoodsname() + "%");
+		}
+		if(startDate!= null && !startDate.equals("")){
+			createCriteria2.andCreattimeBetween(startDate, endDate);
 		}
 		long countByExample = goodsinfoMapper.countByExample(example2);// 总条数
 		PageResult<Goodsinfo> pageResult = new PageResult<Goodsinfo>(selectByExample, (int) countByExample);

@@ -1,6 +1,9 @@
 package com.ndt.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ndt.entity.Driverinfo;
 import com.ndt.service.DriverService;
+import com.ndt.util.DateFormat;
 import com.ndt.util.JsonData;
 import com.ndt.util.PageResult;
 import com.ndt.util.UpLoadUtil;
@@ -56,7 +60,7 @@ public class DriverController {
 	@RequestMapping("/api/optionsDriverManagementStatus.json")
 	@ResponseBody
 	public JsonData getSendDriver() {
-		List<Driverinfo> driver = driverService.getSendDriver();
+		List<Map<String,Object>> driver = driverService.getSendDriver();
 		return JsonData.success(driver);
 	}
 
@@ -65,12 +69,22 @@ public class DriverController {
 	 * @param driver 查询条件
 	 * @param page   当前页
 	 * @return
+	 * @throws ParseException 
 	 */
 	@RequestMapping("/api/driverManagement.json")
 	@ResponseBody
-	public JsonData getDrivers(Driverinfo driver,String numberplate, Integer page) {
-		List<Map<String,Object>> list = driverService.GetDrivers(driver,numberplate, page);
-		int count = driverService.GetCount(driver,numberplate);
+	public JsonData getDrivers(Driverinfo driver,String numberplate, Integer page,String start,String end) throws ParseException {
+		Date starttime=null;
+		Date endtime=null;
+		if(start!=null && !start.equals("")){
+			starttime = DateFormat.getDateFormat(start);
+		}
+		if(end!=null && !end.equals("")){
+			endtime = DateFormat.getDateFormat(end);
+		}
+		
+		List<Map<String,Object>> list = driverService.GetDrivers(driver,numberplate, page,starttime,endtime);
+		int count = driverService.GetCount(driver,numberplate,starttime,endtime);
 		PageResult<Map<String ,Object>> pagedata = new PageResult<>(list, count);
 		return JsonData.success(pagedata);
 	}

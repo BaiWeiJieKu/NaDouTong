@@ -37,6 +37,7 @@
 			<param-value>true</param-value>
 		</init-param>
 	</filter>
+	<!--servlet过滤器，不使用可以去掉  -->
 	<filter>
 		<filter-name>SessionFilter</filter-name>
 		<filter-class>com.ndt.filter.LoginFilter</filter-class>

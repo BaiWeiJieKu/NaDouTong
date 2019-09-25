@@ -1,5 +1,6 @@
 package com.ndt.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,10 +35,11 @@ public interface DriverinfoMapper {
 	int updateByPrimaryKey(Driverinfo record);
 	
 	List<Map<String ,Object>> getDriversInDriverInfo(@Param("realname")String realname,@Param("tel")String tel,@Param("idcard")String idcard,
-			@Param("cid")Integer cid,@Param("numberplate")String numberplate,@Param("page")int page);
+			@Param("cid")Integer cid,@Param("numberplate")String numberplate,@Param("page")int page,@Param("start")Date start,@Param("end")Date end);
 	
 	Integer getDriversCountInDriverInfo(@Param("realname")String realname,@Param("tel")String tel,@Param("idcard")String idcard,
-			@Param("cid")Integer cid,@Param("numberplate")String numberplate);
+			@Param("cid")Integer cid,@Param("numberplate")String numberplate,@Param("start")Date start,@Param("end")Date end);
 	
-	List<Driverinfo> selectDriverStatus();
+	List<Map<String,Object>> selectDriverStatus();
+	int deleteCar(@Param("id")Integer id);
 }

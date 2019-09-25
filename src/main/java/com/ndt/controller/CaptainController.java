@@ -1,5 +1,7 @@
 package com.ndt.controller;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ndt.entity.Captaininfo;
 import com.ndt.service.CaptainService;
+import com.ndt.util.DateFormat;
 import com.ndt.util.JsonData;
 
 @Controller
@@ -49,8 +52,18 @@ public class CaptainController {
 
 	@RequestMapping("/api/myTeam.json")
 	@ResponseBody
-	public JsonData selectCaptain(Captaininfo captaininfo, Integer page) {
-		JsonData selectCaptain = captainService.selectCaptain(captaininfo, page);
-		return selectCaptain;
+	public JsonData selectCaptain(Captaininfo captaininfo, Integer page,String start,String end) {
+		try {
+			Date startDate = DateFormat.getDateFormat(start);
+			Date endDate = DateFormat.getDateFormat(end);
+			JsonData selectCaptain = captainService.selectCaptain(captaininfo, page,startDate,endDate);
+			return selectCaptain;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+		
 	}
 }

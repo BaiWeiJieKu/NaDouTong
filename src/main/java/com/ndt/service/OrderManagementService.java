@@ -32,7 +32,7 @@ public interface OrderManagementService {
 	 * @param end
 	 * @return
 	 */
-	public JsonData selectAll(String ordernumber, String departure, String destination, String page, String goodsname,
+	public JsonData selectAll(String dispatchedparty,String ordernumber, String departure, String destination, String page, String goodsname,
 			String start, String end);
 
 	/**

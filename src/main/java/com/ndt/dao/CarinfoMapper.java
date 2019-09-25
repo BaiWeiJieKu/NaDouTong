@@ -3,6 +3,8 @@ package com.ndt.dao;
 import com.ndt.entity.Carinfo;
 import com.ndt.entity.CarinfoExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface CarinfoMapper {
@@ -31,4 +33,8 @@ public interface CarinfoMapper {
 	int updateByPrimaryKey(Carinfo record);
 	
 	int updateDriverCar(@Param("id")Integer id);
+	
+	int updateDriverAndCar();
+
+	List<Map<String, Object>> getAllCars();
 }

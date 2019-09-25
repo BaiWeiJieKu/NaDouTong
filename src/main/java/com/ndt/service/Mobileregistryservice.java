@@ -60,7 +60,7 @@ public interface Mobileregistryservice {
 	 *@param orderManagementInfo
 	 *@return 
 	 **/
-	public JsonData updateIdcarda(Mobileregistry mobileregistry);
+	public JsonData updatePCphoto(Mobileregistry mobileregistry);
 	
 
 	public JsonData selectRen(Mobileregistry mobileregistry);
@@ -70,6 +70,8 @@ public interface Mobileregistryservice {
 	public JsonData updateDriving(Mobileregistry mobileregistry);
 	public JsonData updateOperating(Mobileregistry mobileregistry);
 	public JsonData updateMo(Integer page);
+	public JsonData selectid(Mobileregistry mobileregistry);
+	public JsonData selectDirid(Mobileregistry mobileregistry);
 	
 	//插入定位点(根据运单号)
 	//存储数据库图片路径

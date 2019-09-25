@@ -1,4 +1,4 @@
-﻿package com.ndt.service.impl;
+package com.ndt.service.impl;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -91,14 +91,14 @@ public class OrderManagementServiceImpl implements OrderManagementService {
 	}
 
 	@Override
-	public JsonData selectAll(String ordernumber, String departure, String destination, String page, String goodsname,
+	public JsonData selectAll(String dispatchedparty,String ordernumber, String departure, String destination, String page, String goodsname,
 			String start, String end) {
 		if (page == null || page.equals(""))
 			page = "1";
 		int pages = Integer.parseInt(page) - 1;
-		List<Map<String, Object>> selectAll = ordermanagement.selectAll(ordernumber, departure, destination, goodsname,
+		List<Map<String, Object>> selectAll = ordermanagement.selectAll(dispatchedparty,ordernumber, departure, destination, goodsname,
 				start, end, pages);
-		int selectCount = ordermanagement.selectCount(ordernumber, departure, destination, goodsname, start, end);
+		int selectCount = ordermanagement.selectCount(dispatchedparty,ordernumber, departure, destination, goodsname, start, end);
 		PageResult<Map<String, Object>> pr = new PageResult<Map<String, Object>>(selectAll, selectCount);
 		return JsonData.success(pr);
 	}

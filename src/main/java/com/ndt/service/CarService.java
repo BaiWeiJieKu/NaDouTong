@@ -2,6 +2,7 @@ package com.ndt.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.ndt.entity.Carinfo;
 
@@ -17,10 +18,12 @@ public interface CarService {
 
 	int selectCount(Carinfo car);
 
-	int selectCarNum(Carinfo car);
+	List<Carinfo> selectCarNum(Carinfo car);
 
 	List<Carinfo> selectCarNums();
 
-	List<Carinfo> getAllCars();
+	List<Map<String, Object>> getAllCars();
+
+	List<Carinfo> selectRoad(Carinfo car);
 
 }

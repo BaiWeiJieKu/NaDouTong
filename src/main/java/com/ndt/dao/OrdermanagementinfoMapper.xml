@@ -135,6 +135,9 @@
 		from ordermanagementinfo,goodsinfo
 		<where>
 			and ordermanagementinfo.gid=goodsinfo.id
+			<if test="dispatchedparty!=null &amp;&amp; dispatchedparty!=&quot;&quot;">
+				and ordermanagementinfo.dispatchedparty=#{dispatchedparty}
+			</if>
 			<if test="goodsname!=null &amp;&amp; goodsname!=&quot;&quot;">
 				and ordermanagementinfo.gid=#{goodsname}
 			</if>
@@ -162,6 +165,9 @@
 		select count(*) from ordermanagementinfo,goodsinfo
 		<where>
 			and ordermanagementinfo.gid=goodsinfo.id
+			<if test="dispatchedparty!=null &amp;&amp; dispatchedparty!=&quot;&quot;">
+				and ordermanagementinfo.dispatchedparty=#{dispatchedparty}
+			</if>
 			<if test="goodsname!=null &amp;&amp; goodsname!=&quot;&quot;">
 				and ordermanagementinfo.gid=#{goodsname}
 			</if>

@@ -1,6 +1,8 @@
 package com.ndt.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mysql.fabric.xmlrpc.base.Data;
 import com.ndt.dao.CarinfoMapper;
 import com.ndt.dao.DriverinfoMapper;
 import com.ndt.dao.GoodsinfoMapper;
@@ -70,12 +73,12 @@ public class MobileregistryserviceImpl implements Mobileregistryservice{
 		else
 		{
 			MobileregistryExample example2 =new MobileregistryExample();
-			example.createCriteria().andTelEqualTo(mobileregistry.getTel());
+			example2.createCriteria().andTelEqualTo(mobileregistry.getTel());
 			List<Mobileregistry> select =mobileregistryMapper.selectByExample(example2);
 			if(!select.isEmpty()){
-				mobileregistryMapper.insertSelective(mobileregistry);
 				return JsonData.fail("1");
 			}else{
+				mobileregistryMapper.insertSelective(mobileregistry);
 				return JsonData.fail("0");
 			}
 		}
@@ -97,24 +100,15 @@ public class MobileregistryserviceImpl implements Mobileregistryservice{
 		example.createCriteria().andTelEqualTo(mobileregistry.getTel());
 		List<Driverinfo> dri=drimapper.selectByExample(example);
 		if(!dri.isEmpty()){
-			int id=dri.get(0).getId();
-			CarinfoExample example2=new CarinfoExample();
-			example2.createCriteria().andCidEqualTo(id);
-			List<Carinfo> car=carmapper.selectByExample(example2);
-			if(!car.isEmpty()){
-				String numberPlate=car.get(0).getNumberplate();
+			String id2=dri.get(0).getId().toString().trim();
 				SendermanagementinfoExample example3=new SendermanagementinfoExample();
-				example3.createCriteria().andOrderdriverEqualTo(numberPlate);
+				example3.createCriteria().andNumberplateEqualTo(id2).andWaybillstateEqualTo("接单中");
 				List<Sendermanagementinfo> send=sendMapper.selectByExample(example3);
 				if(!send.isEmpty()){
 					return JsonData.success(send.get(0).getId());
 				}else{
-					return JsonData.fail("no_order");
+					return JsonData.fail("no_order"); 
 				}
-			}
-			else{
-				return JsonData.fail("司机信息不完整");
-			}
 		}else{
 			return JsonData.fail("please_connt");
 		}
@@ -124,7 +118,7 @@ public class MobileregistryserviceImpl implements Mobileregistryservice{
 	public JsonData insertPoints(Sendermanagementinfo sendermanagementinfo) {
 		// TODO Auto-generated method stub
 		String ad=sendermanagementinfo.getLocation();
-		sendermanagementinfo.setLocation(ad);
+
 		SendermanagementinfoExample example=new SendermanagementinfoExample();
 		example.createCriteria().andIdEqualTo(sendermanagementinfo.getId());
 		int count=sendMapper.updateByExampleSelective(sendermanagementinfo, example);
@@ -197,13 +191,9 @@ public class MobileregistryserviceImpl implements Mobileregistryservice{
 		DriverinfoExample example=new DriverinfoExample();
 		example.createCriteria().andTelEqualTo(mobileregistry.getTel());
 		List<Driverinfo> dri=drimapper.selectByExample(example);
-		int id=dri.get(0).getId();
-		CarinfoExample example2=new CarinfoExample();
-		example2.createCriteria().andCidEqualTo(id);
-		List<Carinfo> car=carmapper.selectByExample(example2);
-		String numberPlate=car.get(0).getNumberplate();
+		String id=dri.get(0).getId().toString().trim();
 		SendermanagementinfoExample example3=new SendermanagementinfoExample();
-		example3.createCriteria().andOrderdriverEqualTo(numberPlate);
+		example3.createCriteria().andNumberplateEqualTo(id);
 		List<Sendermanagementinfo> send=sendMapper.selectByExample(example3);
 		String order=send.get(0).getOrdernumber().toString().trim();
 		OrdermanagementinfoExample example4=new OrdermanagementinfoExample();
@@ -221,7 +211,7 @@ public class MobileregistryserviceImpl implements Mobileregistryservice{
 	}
 
 	@Override
-	public JsonData updateIdcarda(Mobileregistry mobileregistry) {
+	public JsonData updatePCphoto(Mobileregistry mobileregistry) {
 		// TODO Auto-generated method stub
 		MobileregistryExample example =new MobileregistryExample();
 		example.createCriteria().andTelEqualTo(mobileregistry.getTel()).andRealnameEqualTo(mobileregistry.getRealname());
@@ -300,6 +290,7 @@ public class MobileregistryserviceImpl implements Mobileregistryservice{
 		boolean driving_falg=false;
 		boolean idb_falg=false;
 		boolean ope_falg=false;
+		boolean on=false;
 		MobileregistryExample example =new MobileregistryExample();
 		example.createCriteria().andRealnameEqualTo(mobileregistry.getRealname()).andTelEqualTo(mobileregistry.getTel());
 		List<Mobileregistry> selectByExample =mobileregistryMapper.selectByExample(example);
@@ -321,10 +312,12 @@ public class MobileregistryserviceImpl implements Mobileregistryservice{
 		if(!selectByExample.get(0).getDrivinglicensepath().equals("")){
 			driving_falg=true;
 		}
-		if(pc_falg||ope_falg||ida_falg||idb_falg||dri_falg||driving_falg){
+		if(pc_falg&&dri_falg&&ida_falg&&driving_falg&&idb_falg&&ope_falg){
 			mobileregistry.setUploadstate("1");
+			on=true;
 			mobileregistryMapper.updateByExampleSelective(mobileregistry, example);
 		}
+		
 		List<Object> list=new ArrayList<>();
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("pc_flag", pc_falg);
@@ -333,9 +326,41 @@ public class MobileregistryserviceImpl implements Mobileregistryservice{
 		map.put("ida_flag", ida_falg);
 		map.put("driving_flag", driving_falg);
 		map.put("dri_flag", dri_falg);
+		map.put("on",on);
 		list.add(map);
 		return JsonData.success(list);
 	}
+	
+	@Override
+	public JsonData selectid(Mobileregistry mobileregistry){
+		DriverinfoExample example=new DriverinfoExample();
+		example.createCriteria().andTelEqualTo(mobileregistry.getTel());
+		List<Driverinfo> dri=drimapper.selectByExample(example);
+		if(!dri.isEmpty()){
+			int id=dri.get(0).getId();
+			return JsonData.success(id);
+		}else{
+			return JsonData.fail("请尽快联系客服为你填写其他信息！");
+		}
+		
+		
+	}
+	
+	@Override
+	public JsonData selectDirid(Mobileregistry mobileregistry){
+		DriverinfoExample example=new DriverinfoExample();
+		example.createCriteria().andTelEqualTo(mobileregistry.getTel()).andRealnameEqualTo(mobileregistry.getRealname());
+		List<Driverinfo> dri=drimapper.selectByExample(example);
+		if(!dri.isEmpty()){
+			int driid=dri.get(0).getId();
+			return JsonData.success(driid);
+		}else{
+			return JsonData.fail("司机信息不存在");
+		}
+	}
+
+
+
 	
 
 	

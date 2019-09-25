@@ -1,11 +1,15 @@
 package com.ndt.controller;
 
+import java.text.ParseException;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ndt.entity.Goodsinfo;
 import com.ndt.service.GoodsService;
+import com.ndt.util.DateFormat;
 import com.ndt.util.JsonData;
 
 @Controller
@@ -43,10 +47,17 @@ public class GoodsController {
 
 	@RequestMapping("/api/sourceInformation.json")
 	@ResponseBody
-	public JsonData selectGoods(Goodsinfo goodsinfo, Integer page) {
-
-		JsonData selectGoods = goodsService.selectGoods(goodsinfo, page);
-		return selectGoods;
+	public JsonData selectGoods(Goodsinfo goodsinfo, Integer page,String start,String end) {
+		try {
+			Date startDate = DateFormat.getDateFormat(start);
+			Date endDate = DateFormat.getDateFormat(end);
+			JsonData selectGoods = goodsService.selectGoods(goodsinfo, page,startDate,endDate);
+			return selectGoods;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**

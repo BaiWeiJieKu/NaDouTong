@@ -118,8 +118,7 @@
 	</select>
 	
 	<select id="getDriversInDriverInfo" resultType="java.util.Map">
-		SELECT d.*,c.id carid,c.numberplate,c.businessname from driverinfo d LEFT JOIN carinfo c on d.id = c.cid or
-	c.cid = null
+		SELECT d.id,d.sex,d.realname,d.tel,d.idcard,d.address,d.createtime,d.pcphoto,d.idcarda,d.idcardb,d.drivercard,d.cid,d.car as numberplate,d.mark,d.state from driverinfo d
 		<where>
 			<if test="realname!=null &amp;&amp; realname!=&quot;&quot;">
 			 	and d.realname like '%${realname}%'
@@ -134,16 +133,20 @@
 				and d.cid = #{cid}
 			</if>
 			<if test="numberplate!=null &amp;&amp; numberplate!=&quot;&quot;">
-				and c.numberplate like '%${numberplate}%'
+				and d.car like '%${numberplate}%'
+			</if>
+			<if test="start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and d.createtime between #{start} and #{end}
 			</if>
 		</where>
 		order by d.id desc limit #{page},15
 	</select>
 	
 	<select id="getDriversCountInDriverInfo" resultType="integer">
-		SELECT count(d.id) from driverinfo d LEFT JOIN carinfo c on d.id = c.cid or
+		SELECT count(d.id) from driverinfo d right JOIN carinfo c on d.id = c.cid or
 	c.cid = null
 		<where>
+			
 			<if test="realname!=null &amp;&amp; realname!=&quot;&quot;">
 			 	and d.realname like '%${realname}%'
 			</if>
@@ -158,6 +161,9 @@
 			</if>
 			<if test="numberplate!=null &amp;&amp; numberplate!=&quot;&quot;">
 				and c.numberplate like '%${numberplate}%'
+			</if>
+			<if test="start!=null &amp;&amp; start!=&quot;&quot; &amp;&amp; end!=null &amp;&amp; end!=&quot;&quot;">
+				and d.createtime between #{start} and #{end}
 			</if>
 		</where>
 	</select>
@@ -430,9 +436,11 @@
 		state = #{state,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
-	<select id="selectDriverStatus" resultType="com.ndt.entity.Driverinfo">
-		select d.*,c.numberplate from driverinfo d left join carinfo c on d.id = c.cid 
+	<select id="selectDriverStatus" resultType="java.util.HashMap">
+		select d.id,d.realname,c.numberplate from driverinfo d left join carinfo c on d.id = c.cid 
 			where d.state='1' and c.cid IS NOT NUll
 	</select>
-	
+	<update id="deleteCar" parameterType="Integer">
+		update driverinfo d set d.car=null where d.id=#{id}
+	</update>
 </mapper>

@@ -295,6 +295,9 @@
 			<include refid="Example_Where_Clause" />
 		</if>
 	</select>
+	<select id="getAllCars" resultType="java.util.HashMap">
+		SELECT id,cid,numberplate from carinfo
+	</select>
 	<update id="updateByExampleSelective" parameterType="map">
 		update carinfo
 		<set>
@@ -463,5 +466,8 @@
 	</update>
 	<update id="updateDriverCar">
 		update carinfo set cid=null where cid = #{id}
+	</update>
+	<update id="updateDriverAndCar">
+	 	update carinfo c,driverinfo d set d.car=c.numberplate where d.id=c.cid
 	</update>
 </mapper>

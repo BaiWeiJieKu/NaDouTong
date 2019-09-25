@@ -1,4 +1,4 @@
-package com.ndt.controller;
+﻿package com.ndt.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -30,9 +30,13 @@ public class CarController {
 	 */
 	@RequestMapping("/api/insertOptionsInformation.json")
 	public @ResponseBody JsonData insertCar(Carinfo car) {
-		int count = carService.selectCarNum(car);
-		if (count > 0) {
+		List<Carinfo> selectCarNum = carService.selectCarNum(car);
+		List<Carinfo> selectRoad = carService.selectRoad(car);
+		if (selectCarNum.size() > 0) {
 			return JsonData.fail("车牌号已存在!");
+		}
+		if (selectRoad.size() > 0) {
+			return JsonData.fail("道路运输证号已存在！");
 		}
 		if (carService.insertCar(car) > 0) {
 			return JsonData.success();
@@ -62,10 +66,60 @@ public class CarController {
 	 */
 	@RequestMapping("/api/updeteOptionsInformation.json")
 	public @ResponseBody JsonData updateCar(Carinfo car) {
-		if (carService.updateCar(car) > 0) {
-			return JsonData.success();
+		/*SELECT COUNT(*) from carinfo WHERE id!=130031 AND(numberplate='晋BG8595' OR roadtransportcertificate='14022606620')有数据就不修改，无数据就修改*/
+		List<Carinfo> selectCarNum = carService.selectCarNum(car);
+		//车牌号修改与已存在的车牌号重复，车牌号未修改
+		if(selectCarNum.size()>0)
+		{
+			//车牌号和id与原数据匹配
+			if(selectCarNum.get(0).getId()==car.getId() && selectCarNum.get(0).getNumberplate().equals(car.getNumberplate()))
+			{
+				//道路运输证号和id与原数据匹配
+				if(selectCarNum.get(0).getId()==car.getId() && selectCarNum.get(0).getRoadtransportcertificate().equals(car.getRoadtransportcertificate()))
+				{
+					if (carService.updateCar(car) > 0) {
+						return JsonData.success();
+					}
+					return JsonData.fail("修改失败!");
+				}
+				else{
+					//道路证号修改后是否与已存在的道路证号重复
+					List<Carinfo> selectRoad = carService.selectRoad(car);
+					if(selectRoad.size()>0)
+					{
+						return JsonData.fail("道路运输证号已存在!");
+					}
+					else
+					{
+						if (carService.updateCar(car) > 0) {
+							return JsonData.success();
+						}
+						return JsonData.fail("修改失败!");
+					}
+				}
+			}
+			else
+			{
+				return JsonData.fail("车牌号重复!");
+			}
 		}
-		return JsonData.fail("修改失败!");
+		else
+		{
+			//车牌号可以更新，查看道路运输证号是否可以更新
+			List<Carinfo> selectRoad = carService.selectRoad(car);
+			if(selectRoad.size()>0)
+			{
+				return JsonData.fail("道路运输证号已存在");
+			}
+			else
+			{
+				if (carService.updateCar(car) > 0) {
+					return JsonData.success();
+				}
+				return JsonData.fail("修改失败!");
+			}
+		}
+		
 	}
 
 	/**

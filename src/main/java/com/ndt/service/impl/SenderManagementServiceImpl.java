@@ -185,8 +185,14 @@ public class SenderManagementServiceImpl implements SendermanagementService {
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public int delSends(Integer[] ids) {
-		// TODO Auto-generated method stub
-
+		for (int i = 0; i < ids.length; i++) {
+			Sendermanagementinfo selectByPrimaryKey = senderManagement.selectByPrimaryKey(ids[i]);
+			
+			Driverinfo record=new Driverinfo();
+			record.setId(Integer.parseInt(selectByPrimaryKey.getNumberplate()));
+			record.setState("1");
+			driverinfoMapper.updateByPrimaryKeySelective(record);
+		}
 		int deleteByIds = senderManagement.delSends(ids[0]);
 		SendermanagementinfoExample example = new SendermanagementinfoExample();
 		ArrayList<String> values = new ArrayList<>();

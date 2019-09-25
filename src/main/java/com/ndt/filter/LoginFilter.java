@@ -34,7 +34,23 @@ public class LoginFilter implements Filter {
 		if (name == null && !req.getRequestURI().endsWith("/") && !req.getRequestURI().endsWith("register")
 				&& !req.getRequestURI().endsWith("login.json") && !req.getRequestURI().endsWith("register.json")
 				&& !req.getRequestURI().endsWith(".js")&& !req.getRequestURI().endsWith(".css")
-				&& !req.getRequestURI().endsWith(".ttf")&& !req.getRequestURI().endsWith(".woff")) {
+				&& !req.getRequestURI().endsWith(".ttf")&& !req.getRequestURI().endsWith(".woff")
+				&& !req.getRequestURI().endsWith("insertLogin.json")
+				&& !req.getRequestURI().endsWith("selectYun.json")
+				&& !req.getRequestURI().endsWith("selectDing.json")
+				&& !req.getRequestURI().endsWith("insertPoints.json")
+				&& !req.getRequestURI().endsWith("selectState.json")
+				&& !req.getRequestURI().endsWith("updateDriver.json")
+				&& !req.getRequestURI().endsWith("selectRen.json")
+				&& !req.getRequestURI().endsWith("uploadPcPhoto")
+				&& !req.getRequestURI().endsWith("selectid.json")
+				&& !req.getRequestURI().endsWith("uploadDriver")
+				&& !req.getRequestURI().endsWith("uploadIdcarda")
+				&& !req.getRequestURI().endsWith("uploadIdcardb")
+				&& !req.getRequestURI().endsWith("uploadDriving")
+				&& !req.getRequestURI().endsWith("uploadOperating")
+				&& !req.getRequestURI().endsWith("selectdirid.json")
+				&& !req.getRequestURI().endsWith("statis.json")) {
 			/*res.sendRedirect(req.getContextPath()+"/");*/
 			ObjectMapper mapper = new ObjectMapper();
 			String json = mapper.writeValueAsString(JsonData.fail("/"));
